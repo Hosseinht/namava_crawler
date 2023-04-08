@@ -6,6 +6,14 @@
 #     https://docs.scrapy.org/en/latest/topics/settings.html
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
+import os
+import django
+import sys
+
+sys.path.append(os.path.dirname(os.path.abspath(".")))
+os.environ["DJANGO_SETTINGS_MODULE"] = "namavacrawler.settings"
+
+django.setup()
 
 BOT_NAME = "crawler"
 
@@ -20,14 +28,6 @@ USER_AGENT = (
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
 
-import os
-import django
-import sys
-
-sys.path.append(os.path.dirname(os.path.abspath(".")))
-os.environ["DJANGO_SETTINGS_MODULE"] = "namavacrawler.settings"
-
-django.setup()
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 # CONCURRENT_REQUESTS = 32
 
@@ -72,9 +72,10 @@ django.setup()
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
+    'scrapy.pipelines.images.ImagesPipeline': 1,
     "crawler.pipelines.MoviePipline": 300,
 }
-
+IMAGES_STORE = "media"
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
 # AUTOTHROTTLE_ENABLED = True

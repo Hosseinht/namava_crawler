@@ -1,7 +1,7 @@
 from asgiref.sync import sync_to_async
 from django.db import transaction
 
-from namava.models import Movie, Genre
+from namava.models import Movie, Genre, Image
 
 
 class CrawlerPipeline:
@@ -10,6 +10,10 @@ class CrawlerPipeline:
 
 
 class MoviePipline(object):
+    """
+    This class process item object and save it to database
+    """
+
     @sync_to_async
     @transaction.atomic
     def process_item(self, item, spider):
@@ -21,7 +25,6 @@ class MoviePipline(object):
             genres.append(genre)
 
         movie = Movie.objects.create(
-            link=item["link"],
             title=item["title"],
             summary=item["summary"],
             release_year=item["release_year"],
