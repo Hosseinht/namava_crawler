@@ -8,7 +8,7 @@ from crawler.items import MovieItem
 class NamavaSpider(scrapy.Spider):
     name = "namava"
     allowed_domains = ["namava.ir"]
-    start_urls = ["https://www.namava.ir/api/v1.0/medias/latest/?pi=1&ps=10"]
+    start_urls = ["https://www.namava.ir/api/v1.0/medias/latest/?pi=1&ps=30"]
 
     def parse(self, response):
         """
@@ -39,16 +39,20 @@ class NamavaSpider(scrapy.Spider):
             image = f"https://static.namava.ir{image}"
             movie_images.append(image)
 
+        casts = [cast["castName"] for cast in result['casts'] if cast["castRole"] == "Actor"]
+        director = [cast["castName"] for cast in result['casts'] if cast["castRole"] == "Director"][0]
         category_names = [category["categoryName"] for category in result["categories"]]
 
         item = MovieItem()
 
         item["title"] = result["caption"]
+        item["director"] = director
         item["summary"] = result["story"]
         item["release_year"] = result["year"]
         item["rate"] = result["hit"]
         item["duration"] = result["mediaDuration"]
         item["genre"] = category_names
+        item["cast"] = casts
         item["image_urls"] = movie_images
 
         yield item

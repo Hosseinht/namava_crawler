@@ -9,7 +9,7 @@ from django.db import transaction
 from PIL import Image as PILImage
 from scrapy.exceptions import DropItem
 
-from namava.models import Genre, Image, Movie
+from namava.models import Genre, Image, Movie, Cast
 
 
 class CrawlerPipeline:
@@ -31,23 +31,36 @@ class MoviePipline(object):
     @transaction.atomic
     def process_item(self, item, spider):
         genre_names = item.get("genre", [])
+        cast_name = item.get("cast", [])
 
         genres = []
         for name in genre_names:
             genre, created = Genre.objects.get_or_create(name=name)
             genres.append(genre)
 
-        movie = Movie.objects.create(
-            title=item["title"],
-            summary=item["summary"],
-            release_year=item["release_year"],
-            rate=item["rate"],
-            duration=item["duration"],
-        )
+        casts = []
+        for cast in cast_name:
+            cast, created = Cast.objects.get_or_create(name=cast)
+            casts.append(cast)
+
+        try:
+            movie = Movie.objects.get(title=item["title"], director=item["director"])
+        except Movie.DoesNotExist:
+            movie = Movie.objects.create(
+                title=item["title"],
+                director=item["director"],
+                summary=item["summary"],
+                release_year=item["release_year"],
+                rate=item["rate"],
+                duration=item["duration"],
+            )
 
         # Add genres to the movie
         for genre in genres:
             movie.genre.add(genre)
+
+        for cast in casts:
+            movie.cast.add(cast)
 
         if "image_urls" in item:
             for image_url in item["image_urls"]:

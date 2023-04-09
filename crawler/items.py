@@ -18,4 +18,5 @@ class MovieItem(DjangoItem):
 
     django_model = Movie
     genre = scrapy.Field()
+    cast = scrapy.Field()
     image_urls = scrapy.Field()
