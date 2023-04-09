@@ -22,7 +22,7 @@ class Movie(models.Model):
 
 class Image(models.Model):
     image = models.ImageField()
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='images')
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='image')
 
     def __str__(self):
         return self.movie.title

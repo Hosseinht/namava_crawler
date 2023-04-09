@@ -1,13 +1,14 @@
 import json
+
 import scrapy
-from scrapy.loader import ItemLoader
-from crawler.items import MovieItem, ImageItem
+
+from crawler.items import MovieItem
 
 
 class NamavaSpider(scrapy.Spider):
     name = "namava"
     allowed_domains = ["namava.ir"]
-    start_urls = ["https://www.namava.ir/api/v1.0/medias/latest/?pi=1&ps=30"]
+    start_urls = ["https://www.namava.ir/api/v1.0/medias/latest/?pi=1&ps=10"]
 
     def parse(self, response):
         """
@@ -29,12 +30,12 @@ class NamavaSpider(scrapy.Spider):
     def parse_movie(self, response):
         resp = json.loads(response.body)
         result = resp["result"]
-        images = json.loads(result["slide"])
+        image_urls = json.loads(result["slide"])
 
         movie_images = []
-        for image in images:
+        for image_url in image_urls:
             # get all the images of a movie and change their relative urls to absolute urls
-            image = image["Url"]
+            image = image_url["Url"]
             image = f"https://static.namava.ir{image}"
             movie_images.append(image)
 
@@ -48,7 +49,6 @@ class NamavaSpider(scrapy.Spider):
         item["rate"] = result["hit"]
         item["duration"] = result["mediaDuration"]
         item["genre"] = category_names
-        # item['images'] = movie_images,
+        item["image_urls"] = movie_images
 
         yield item
-

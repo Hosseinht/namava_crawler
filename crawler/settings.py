@@ -7,8 +7,9 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 import os
-import django
 import sys
+
+import django
 
 sys.path.append(os.path.dirname(os.path.abspath(".")))
 os.environ["DJANGO_SETTINGS_MODULE"] = "namavacrawler.settings"
@@ -72,7 +73,8 @@ ROBOTSTXT_OBEY = True
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'scrapy.pipelines.images.ImagesPipeline': 1,
+    "scrapy.pipelines.images.ImagesPipeline": 1,
+    # 'crawler.pipelines.CustomImagePipeline': 1,
     "crawler.pipelines.MoviePipline": 300,
 }
 IMAGES_STORE = "media"

@@ -1,7 +1,7 @@
 import scrapy
 from scrapy_djangoitem import DjangoItem
 
-from namava.models import Movie, Image
+from namava.models import Movie
 
 
 class CrawlerItem(scrapy.Item):
@@ -18,9 +18,4 @@ class MovieItem(DjangoItem):
 
     django_model = Movie
     genre = scrapy.Field()
-
-
-class ImageItem(DjangoItem):
-    django_model = Image
     image_urls = scrapy.Field()
-    image = scrapy.Field()
