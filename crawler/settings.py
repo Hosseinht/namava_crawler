@@ -10,6 +10,7 @@ import os
 import sys
 
 import django
+from django.conf import settings
 
 sys.path.append(os.path.dirname(os.path.abspath(".")))
 os.environ["DJANGO_SETTINGS_MODULE"] = "namavacrawler.settings"
@@ -74,10 +75,9 @@ ROBOTSTXT_OBEY = True
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
     "scrapy.pipelines.images.ImagesPipeline": 1,
-    # 'crawler.pipelines.CustomImagePipeline': 1,
     "crawler.pipelines.MoviePipline": 300,
 }
-IMAGES_STORE = "media"
+IMAGES_STORE = os.path.join(settings.MEDIA_ROOT)
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
 # AUTOTHROTTLE_ENABLED = True
